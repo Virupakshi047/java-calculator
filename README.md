@@ -75,7 +75,7 @@ It supports **infix notation** conversion to **postfix** (Reverse Polish Notatio
 ![image](https://github.com/user-attachments/assets/2b9a1f7d-7f8a-4bb2-8cd7-3235832f9f53)
 ### 5.7/3-2+1
 ![image](https://github.com/user-attachments/assets/457b0a30-e196-46e8-bfd8-8f1b59ee3ee9)
-### 6.(5+3*2)+(2*4/2)
+### 6.(5 + 3 * 2)+(2 * 4/2)
 ![image](https://github.com/user-attachments/assets/b74ad7f3-0177-4517-b091-d4b7b549cbb7)
 
 
