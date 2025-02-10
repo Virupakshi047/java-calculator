@@ -147,6 +147,69 @@ public class Application {
         return postfix.toString().trim();
     }
 
+    private static int evaluate(int a, int b, char operator) {
+        try {
+            switch (operator) {
+                case '+': return a + b;
+                case '-': return a - b;
+                case '*': return a * b;
+                case '/':
+                    if (b == 0) {
+                        throw new ArithmeticException("Division by zero is not allowed");
+                    }
+                    return a / b;
+                default:
+                    throw new IllegalArgumentException("Invalid operator: " + operator);
+            }
+        } catch (ArithmeticException e) {
+            System.out.println(e.getMessage()); // Print error message
+            return 0; // Return a default value (could also throw an exception based on requirement)
+        }
+    }
+
+
+    public static int calculate(String postfixExpression) {
+        if (postfixExpression == null || postfixExpression.trim().isEmpty()) {
+            throw new IllegalArgumentException("Empty expression");
+        }
+
+        Stack<Integer> stack = new Stack<>();
+        String[] tokens = postfixExpression.split("\\s+");
+
+        for (String token : tokens) {
+            if (token.isEmpty()) continue; // Skip empty tokens
+
+            if ("+-*/".contains(token)) {
+                if (stack.size() < 2) {
+                    // Handle unary minus case
+                    if (token.equals("-") && stack.size() == 1) {
+                        int operand = stack.pop();
+                        stack.push(-operand);
+                    } else {
+                        throw new IllegalArgumentException("Invalid expression");
+                    }
+                } else {
+                    int op2 = stack.pop();
+                    int op1 = stack.pop();
+                    stack.push(evaluate(op1, op2, token.charAt(0))); // Use evaluate method
+                }
+            } else {
+                try {
+                    stack.push(Integer.parseInt(token));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Invalid token: " + token);
+                }
+            }
+        }
+
+        if (stack.size() != 1) {
+            throw new IllegalArgumentException("Invalid expression");
+        }
+
+        return stack.peek();
+    }
+
+
 
     public static void main(String[] args) {
         System.out.println("Enter the expression");
@@ -155,6 +218,7 @@ public class Application {
         if(isValidExpression(expression)){
             System.out.println("Its valid");
           expression = toPostfix(expression);
+          System.out.println(calculate(expression));
         }else{
             System.out.println("Not valid");
         }
