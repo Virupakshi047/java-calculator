@@ -212,15 +212,16 @@ public class Application {
 
 
     public static void main(String[] args) {
-        System.out.println("Enter the expression");
         Scanner input = new Scanner(System.in);
+        System.out.print("Enter the expression: "); // Use print instead of println
         String expression = input.nextLine();
-        if(isValidExpression(expression)){
-            System.out.println("Its valid");
-          expression = toPostfix(expression);
-          System.out.println(calculate(expression));
-        }else{
-            System.out.println("Not valid");
+
+        if (isValidExpression(expression)) {
+            expression = toPostfix(expression);
+            System.out.println("Output: "+calculate(expression));
+        } else {
+            System.out.println("Not valid enter again");
         }
     }
+
 }
