@@ -89,7 +89,6 @@ public class Application {
 
             if (Character.isDigit(c)) {
                 number.append(c);
-                // If it's the last character or next char is not a digit
                 if (i == expression.length() - 1 || !Character.isDigit(expression.charAt(i + 1))) {
                     postfix.append(number).append(" ");
                     number = new StringBuilder();
@@ -99,6 +98,12 @@ public class Application {
                 operatorStack.push(c);
             }
             else if (c == ')') {
+                // If we have a negative sign right before (, handle unary minus
+                if (!number.toString().isEmpty()) {
+                    postfix.append(number).append(" ");
+                    number = new StringBuilder();
+                }
+
                 while (!operatorStack.isEmpty() && operatorStack.peek() != '(') {
                     postfix.append(operatorStack.pop()).append(" ");
                 }
@@ -107,10 +112,20 @@ public class Application {
                 }
             }
             else if (isOperator(c)) {
-                // Handle negative numbers
-                if (c == '-' && (i == 0 || expression.charAt(i-1) == '(')) {
-                    number.append(c);
+                // Handle unary minus
+                if (c == '-' && (i == 0 || expression.charAt(i-1) == '(' || isOperator(expression.charAt(i-1)))) {
+                    if (i < expression.length() - 1 && expression.charAt(i+1) == '(') {
+                        postfix.append("0 "); // Add 0 before unary minus
+                        operatorStack.push(c);
+                    } else {
+                        number.append(c);
+                    }
                     continue;
+                }
+
+                if (!number.toString().isEmpty()) {
+                    postfix.append(number).append(" ");
+                    number = new StringBuilder();
                 }
 
                 while (!operatorStack.isEmpty() && operatorStack.peek() != '(' &&
@@ -121,17 +136,16 @@ public class Application {
             }
         }
 
+        if (!number.toString().isEmpty()) {
+            postfix.append(number).append(" ");
+        }
+
         while (!operatorStack.isEmpty()) {
             postfix.append(operatorStack.pop()).append(" ");
         }
 
         return postfix.toString().trim();
     }
-
-    public static int calculate(String expression) {
-        return 0;
-    }
-
 
 
     public static void main(String[] args) {
@@ -140,7 +154,7 @@ public class Application {
         String expression = input.nextLine();
         if(isValidExpression(expression)){
             System.out.println("Its valid");
-          System.out.println(toPostfix(expression));
+          expression = toPostfix(expression);
         }else{
             System.out.println("Not valid");
         }
